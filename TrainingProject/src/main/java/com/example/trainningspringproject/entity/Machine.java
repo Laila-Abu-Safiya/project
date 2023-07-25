@@ -10,15 +10,15 @@ import jakarta.persistence.Id;
 public class Machine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    private String Name;
-    private String Location;
+    private int id;
+    private String name;
+    private String location;
     private int user;
 
     public Machine(int id, String name, String location, int user) {
-        Id = id;
-        Name = name;
-        Location = location;
+        this.id = id;
+        this.name = name;
+        this.location = location;
         this.user = user;
     }
 
@@ -27,27 +27,27 @@ public class Machine {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getLocation() {
-        return Location;
+        return location;
     }
 
     public void setLocation(String location) {
-        Location = location;
+        this.location = location;
     }
 
     public int getUser() {

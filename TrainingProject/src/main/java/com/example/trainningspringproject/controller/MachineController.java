@@ -3,60 +3,42 @@ package com.example.trainningspringproject.controller;
 import com.example.trainningspringproject.entity.Machine;
 import com.example.trainningspringproject.service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.logging.Logger;
 
-@Controller
+@RestController
+@RequestMapping(path = "tenant/machine/device")
 public class MachineController {
 
+    private final MachineService machineService;
+    private static final Logger logger = Logger.getLogger(MachineController.class.getName());
+
     @Autowired
-    private MachineService service;
-
-    @GetMapping("/")
-    public String viewHomePage(Model model) {
-        List<Machine> listOfMachines = service.listAll();
-        model.addAttribute("listOfMachines", listOfMachines);
-        System.out.print(listOfMachines);
-        return "index";
+    public MachineController(MachineService machineService) {
+        this.machineService = machineService;
     }
 
-    @GetMapping("/tenant/{id}/machine/device")
-    public String viewUserHome(@PathVariable int id, Model model){
-        System.out.print(id);
-        Optional<Machine> listOfUsersMachine = service.listUserMachines(id);
-       // System.out.print(listOfUsersMachine);
-        model.addAttribute("listOfUsersMachine", listOfUsersMachine);
-        return "index";
-    }
-    @RequestMapping("/tenant/{id}/machine/device")
-    public String deleteMachine(@PathVariable(name = "id") int id) {
-        service.delete(id);
-        return "redirect:/";
+    @GetMapping
+    public List<Machine> getAllMachine(){
+        return machineService.listAll();
     }
 
-    @GetMapping("/new")
-    public String add(Model model) {
-        model.addAttribute("Machine", new Machine());
-        return "new";
+    @PostMapping
+    public void addNewMacines(@RequestBody Machine machine){
+        machineService.addNewMachine(machine);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String saveMachine(@ModelAttribute("Machine") Machine std) {
-        service.save(std);
-        return "redirect:/";
+    @DeleteMapping(path = "{id}")
+    public void deleteMachine(@PathVariable("id") int id){
+        machineService.deleteMachine(id);
     }
 
-    @RequestMapping("/tenant/{id}/machine/device/{user}")
-    public ModelAndView showEditMachinePage(@PathVariable(name = "id") int id,@PathVariable(name = "user") int user) {
-        ModelAndView mav = new ModelAndView("new");
-        Machine std = service.get(id);
-        mav.addObject("Machine", std);
-        return mav;
-
+   @PutMapping(path = "{id}")
+    public void updateMachineInfo(@PathVariable("id") int id,
+                                  @RequestParam(required = false) String Name,
+                                  @RequestParam(required = false) String Location){
+        machineService.updateMachine(id,Name,Location);
     }
 }
