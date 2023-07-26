@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "user/job/task")
@@ -31,12 +32,21 @@ public class JobController {
     public void addNewJob(@RequestBody Job job){
         boolean exists = machineService.checkMachineById(job.getMachineid());
         if(exists) {
+            if(job.getProirty() >=1 && job.getProirty()<=5){
             jobService.addNewJob(job);
+            }
+            else {
+                throw new IllegalStateException("Priority value should be [1,5]");
+            }
         }
         else {
             throw new IllegalStateException("Machine with id "+ job.getMachineid() +" is not exists");
 
         }
     }
+
+    @GetMapping("{id}")
+    public Optional<Job> getJob(@PathVariable int id) {
+        return jobService.getSpecificJob(id);}
 
 }

@@ -25,7 +25,6 @@ public class JobService {
     public void checkIfMachineUsed(int machineid){
         Optional<Job> existsJobs = jobRepository.findJobByMachineId(machineid);
         if(existsJobs.isPresent()){
-            System.out.println("acess");
             checkDeleteRelatedJob(existsJobs.get().getTaskid());
         }
     }
@@ -34,6 +33,8 @@ public class JobService {
         jobRepository.deleteById(id);
     }
 
-
+    public Optional<Job> getSpecificJob(int id){
+        return jobRepository.findById(id);
+    }
 
 }
