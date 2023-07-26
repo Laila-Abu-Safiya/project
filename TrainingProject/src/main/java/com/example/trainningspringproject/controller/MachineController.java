@@ -1,23 +1,23 @@
 package com.example.trainningspringproject.controller;
 
 import com.example.trainningspringproject.entity.Machine;
+import com.example.trainningspringproject.service.JobService;
 import com.example.trainningspringproject.service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "tenant/machine/device")
 public class MachineController {
 
     private final MachineService machineService;
-    private static final Logger logger = Logger.getLogger(MachineController.class.getName());
-
+    private final JobService jobService;
     @Autowired
-    public MachineController(MachineService machineService) {
+    public MachineController(MachineService machineService, JobService jobService) {
         this.machineService = machineService;
+        this.jobService = jobService;
     }
 
     @GetMapping
@@ -32,7 +32,12 @@ public class MachineController {
 
     @DeleteMapping(path = "{id}")
     public void deleteMachine(@PathVariable("id") int id){
+        //this method will check if there is any job related and delete it
+        jobService.checkIfMachineUsed(id);
+
+        //delete machine
         machineService.deleteMachine(id);
+
     }
 
    @PutMapping(path = "{id}")

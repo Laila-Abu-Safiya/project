@@ -15,7 +15,6 @@ import java.util.Optional;
 public class MachineService {
     @Autowired
     private MachineRepository machineRepositor;
-
     public List<Machine> listAll(){
         return machineRepositor.findAll();
     }
