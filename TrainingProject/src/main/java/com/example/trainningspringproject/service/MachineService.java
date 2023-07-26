@@ -20,10 +20,17 @@ public class MachineService {
         return machineRepositor.findAll();
     }
 
+    public boolean checkMachineById(int id){
+        boolean exists =  machineRepositor.existsById(id);
+        if(!exists){
+            return false;
+        }
+        return true;
+    }
     public void deleteMachine(int id){
         boolean exists =  machineRepositor.existsById(id);
         if(!exists){
-            throw new IllegalStateException("Machine with id"+ id +"is not exists");
+            throw new IllegalStateException("Machine with id "+ id +" is not exists");
         }
         else{
            machineRepositor.deleteById(id);
