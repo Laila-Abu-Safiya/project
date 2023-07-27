@@ -13,4 +13,7 @@ public interface MachineRepository extends JpaRepository<Machine, Integer> {
 
     @Query("SELECT machine.id FROM Machine machine where machine.user = ?1")
     int [] findMachinesByUserId(int userid);
+
+    @Query("SELECT machine FROM Machine machine where machine.user = ?1")
+    Machine [] findUserMachines(int userid);
 }

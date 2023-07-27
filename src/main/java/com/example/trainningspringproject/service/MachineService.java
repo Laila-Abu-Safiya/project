@@ -1,7 +1,6 @@
 package com.example.trainningspringproject.service;
 
 import com.example.trainningspringproject.Exeptions.EmptyException;
-import com.example.trainningspringproject.entity.Job;
 import com.example.trainningspringproject.entity.Machine;
 import com.example.trainningspringproject.repository.MachineRepository;
 import jakarta.transaction.Transactional;
@@ -10,14 +9,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class MachineService {
     @Autowired
     private MachineRepository machineRepositor;
-    public List<Machine> listAll(){
-        return machineRepositor.findAll();
+    public List<Machine> listAll(int user) throws Exception {
+        Machine[] userMachines = machineRepositor.findUserMachines(user);
+        if(userMachines.length == 0){
+            throw new Exception("The user don't have any machine");
+        }
+        else{
+            return List.of(userMachines);
+        }
     }
 
     public boolean checkMachineById(int id){

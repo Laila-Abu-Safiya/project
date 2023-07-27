@@ -24,8 +24,13 @@ public class MachineController {
     }
 
     @GetMapping(path = "tenant/{user}/machine/device")
-    public List<Machine> getAllMachines(){
-        return machineService.listAll();
+    public List<Machine> getAllMachines(@PathVariable("user") int user) throws Exception{
+        boolean exists = userService.checkIfUserExists(user);
+        if(exists) {
+            return machineService.listAll(user);
+        }else {
+            throw new Exception("User is not exists");
+        }
     }
 
     @PostMapping(path = "tenant/{user}/machine/device")
@@ -43,10 +48,6 @@ public class MachineController {
 
     @DeleteMapping(path = "tenant/{user}/machine/device")
     public void deleteMachine(@PathVariable("user") int user) throws Exception {
-        //this method will check if there is any job related and delete it
-        //jobService.checkIfMachineUsed(id);
-
-        //delete machine
         boolean exists = userService.checkIfUserExists(user);
         if(exists) {
             machineService.deleteMachine(user);
