@@ -1,6 +1,7 @@
 package com.example.trainningspringproject.service;
 
 import com.example.trainningspringproject.Exeptions.EmptyException;
+import com.example.trainningspringproject.entity.Job;
 import com.example.trainningspringproject.entity.Machine;
 import com.example.trainningspringproject.repository.MachineRepository;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class MachineService {
@@ -25,13 +27,15 @@ public class MachineService {
         }
         return true;
     }
-    public void deleteMachine(int id){
-        boolean exists =  machineRepositor.existsById(id);
-        if(!exists){
-            throw new IllegalStateException("Machine with id "+ id +" is not exists");
-        }
-        else{
-           machineRepositor.deleteById(id);
+    public void deleteMachine(int user) throws Exception {
+
+        int [] userMachines = machineRepositor.findMachinesByUserId(user);
+        if(userMachines.length == 0){
+            throw new Exception("The user don't have any machine");
+        }else {
+             for(int i=0; i<userMachines.length; i++) {
+                 machineRepositor.deleteById(userMachines[i]);
+            }
         }
     }
 

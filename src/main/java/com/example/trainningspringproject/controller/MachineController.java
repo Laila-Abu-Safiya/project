@@ -41,13 +41,18 @@ public class MachineController {
 
     }
 
-    @DeleteMapping(path = "{id}")
-    public void deleteMachine(@PathVariable("id") int id){
+    @DeleteMapping(path = "tenant/{user}/machine/device")
+    public void deleteMachine(@PathVariable("user") int user) throws Exception {
         //this method will check if there is any job related and delete it
         //jobService.checkIfMachineUsed(id);
 
         //delete machine
-        machineService.deleteMachine(id);
+        boolean exists = userService.checkIfUserExists(user);
+        if(exists) {
+            machineService.deleteMachine(user);
+        }else {
+            throw new Exception("User is not exists");
+        }
 
     }
 
@@ -60,7 +65,7 @@ public class MachineController {
            if(machine.getUser() == user){
                return machineService.updateMachine(id, machine.getName(), machine.getLocation());
            }else {
-               throw new Exception("User is not the Machine user");
+               throw new Exception("User is not the Machine owner");
            }
 
        }else {
